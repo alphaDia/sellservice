@@ -1,0 +1,40 @@
+{% extends "base_generic.html" %} 
+{% load crispy_forms_tags %} 
+{% load static %}
+
+{% block title %}
+  Sign-out
+{% endblock title %}
+  
+
+{% block content %}
+  <main class="container">
+    <div
+      class="row justify-content-center align-items-center"
+      style="height: 40em;"
+    >
+      <div class="col-lg-5">
+        <div class=" shadow p-5 mt-4 border animate__animated animate__fadeIn">
+          <p class="h2 text-center mb-5">Inscription</p>
+          <form action="{% url 'signup' %}" method="post" novalidate id="signupForm", autocomplete="off">
+            {% csrf_token %} {% for field in form %} {{ field|as_crispy_field}} 
+            {%endfor %}
+            <button class="btn w-100 p-2 my-2 button" type="button" id="signupbutton">
+              S'inscrire
+            </button>
+          </form>
+          <div class="d-flex mt-4">
+            <p class="text-center mt-2">Vous avez deja un compte ?</p>
+            <a href="{% url 'login' %}" class="mx-auto"
+              ><button class="btn p-2 ml-2 button">Connectez vous</button></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock content%}
+  {% block javascript %} 
+    <script src="{% static 'ss/js/connexion_form.js' %}"></script>
+
+  {% endblock javascript %}

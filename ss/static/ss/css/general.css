@@ -1,0 +1,76 @@
+:root {
+  --second-color: #148653;
+  --primary-color: #ffffff;
+}
+
+body {
+  background: white;
+  margin: 0;
+  font-family: "Montserrat_body", sans-serif;
+  padding: 0;
+}
+
+a {
+  color: var(--second-color);
+  font-family: "Montserrat", sans-serif;
+}
+
+.div-size {
+  height: 1000px;
+  width: 1000px;
+}
+
+.button {
+  background: var(--second-color);
+  color: white;
+  font-family: "Montserrat", sans-serif;
+}
+
+.button:hover {
+  color: white;
+}
+
+/*#div_id_username label,
+#div_id_password1 label,
+#div_id_password2 label,
+#div_id_password label,
+#div_id_email label,
+#div_id_first_name label,
+#div_id_last_name label {
+  display: none;
+}*/
+
+#error_1_id_password,
+#error_1_id_password1,
+#error_1_id_email,
+#error_1_id_password2,
+#error_1_id_username {
+  margin-top: 0;
+}
+
+small#hint_id_username,
+small#hint_id_password1,
+small#hint_id_password2,
+#error_1_id_email {
+  display: none;
+}
+
+.desc {
+  font-weight: lighter;
+  font-size: 1em !important;
+  color: var(--primary-color);
+}
+
+/*.secondary-text-color {
+  color: var(--second-color);
+}*/
+
+.my-border {
+  border: 1px solid var(--second-color);
+  margin: 1em 5em 1em 5em;
+}
+
+.dropdown-item:hover {
+  color: #ffffff;
+  background-color: var(--second-color);
+}

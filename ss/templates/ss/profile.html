@@ -1,0 +1,111 @@
+{% extends "base_generic.html" %} {% load crispy_forms_tags %} {% load static %}
+{% block title %} Profile | {{user.first_name}} {{user.last_name}} 
+{% endblock title %} {% block css %}
+
+<link rel="stylesheet" href="{% static 'ss/css/profile.css'%}" />
+{% endblock css %} {% block content %}
+
+  <main class="container animate__animated animate__fadeIn">
+
+    {% if messages %}
+    
+    <div class="alert alert-success alert-dismissible fade show mt-0" role="alert">
+      <span style="font-size: 1.5em;">
+        {% for message in  messages %}
+          {{message}} 
+        {% endfor %}
+      </span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+      
+    {% endif %}
+      
+    
+    <div class="row mt-5">
+      <div class="col-md-2">
+        <nav class="border">
+          <ul class="navbar-nav side-navbar">
+            <li class="nav-item">
+              <a class="nav-link active-link px-3" href="#profile">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-3" href="#update-profile">Update Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-3" href="#annonces"
+                >Annonce <span class="badge badge-secondary">3</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    
+      <div style="height: 40px; visibility: hidden;">""</div>
+      <!--show profile detail -->
+        <div class="col-md-4 active mx-auto shadow p-4 border animate__animated animate__fadeIn" id="profile">
+          <div>
+            <i class="material-icons" style="font-size: 100px;">account_circle</i>
+            <strong>{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</strong>
+          </div>
+    
+          <p class="mt-4">
+            <strong>email:</strong><br />
+            <span class="text-muted">{{user.email}}</span>
+          </p>
+    
+          <p class="mt-4">
+            <strong>Numero:</strong><br />
+            {% if user.tel_number %} <span class="text-muted">{{user.tel_number}}</span>  
+            {% else %}
+              <span class="text-muted">
+                Fournissez un numero pour qu'on puisse vous contactez dans
+                le cas ou quelqu'un aura besoin de vos talent
+              </span>
+            {% endif %}
+          </p>
+    
+          <p class="mt-4 ">
+            <strong>Promotteur:</strong><br />
+            {% if user.promotteur %} <span class="text-muted">Oui</span>  {% else %} <span class="text-muted">Non</span> {% endif %}
+          </p>
+      
+      
+          <p class="mt-4">
+            <strong>Biographie:</strong><br />
+            {% if user.description %}
+              <span class="text-muted ">{{user.description}}</span>
+            {% else %}
+              <span> Update your biographie to help people know you well </sapn>
+            {% endif %}
+          </p>
+        
+      </div>
+    
+      
+      <!-- update profile page -->
+      
+      <div class="col-md-4 p-4 mx-auto shadow border animate__animated animate__fadeIn" id="update-profile" style="display: none;">
+        <form
+          action="{% url 'profile' user.id %}"
+          method="post"
+          novalidate
+          id="updateProfileForm"
+        >
+          {% csrf_token %} {% for field in form %} {{field|as_crispy_field}} {% endfor %}
+          <button type="submit" class="btn button w-100 p-2" id="save-button">Save</button>
+        </form>
+      </div>    
+      
+      
+    
+      <!-- show annonces-->
+      <div class="col-md-4 p-4 mx-auto animate__animated animate__fadeIn" id="annonces" style="display: none;">
+        <p>Aucune annonce disponible pour le moment</p>
+      </div>
+    </div>
+  </main>
+{% endblock content %} {% block javascript %}
+<script src="{% static 'ss/js/profile.js' %}"></script>
+{% endblock javascript %}

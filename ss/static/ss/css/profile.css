@@ -1,0 +1,36 @@
+:root {
+  --second-color: #148653;
+  --primary-color: #ffffff;
+}
+
+.side-navbar li:hover {
+  background-color: var(--second-color);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.side-navbar li a:hover {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.active-link {
+  background-color: var(--second-color);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  color: white;
+  font-weight: bold;
+}
+
+#profile > div:first-child strong {
+  position: relative;
+  left: 0em;
+  bottom: 2rem;
+  font-size: 1.3rem;
+}
+
+p {
+  color: #000;
+}
+
+.my-border {
+  border: 1px solid #000;
+}

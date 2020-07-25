@@ -1,0 +1,141 @@
+{% load crispy_forms_tags %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <link
+    	rel="stylesheet"
+    	href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'ss/css/general.css' %}" />
+    {% block css %}{% endblock css %}
+
+    <title>
+      {% block title %} Login {% endblock title %}
+    </title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+        <a class="navbar-brand" href="#">Proffessions</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div style="width: 400px;">
+          <form class="form-inline">
+            <input class="form-control mr-sm-2 w-100" type="search" placeholder="Search" aria-label="Search">
+          </form>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            {% if not user.is_authenticated %}
+            <li class="nav-item mt-3">
+              <a class="nav-link" href="{% url 'signup' %}"
+                >Incrivez vous<span class="sr-only">(current)</span></a
+              >
+            </li>
+            <li class="nav-item mt-3">
+              <a class="nav-link" href="{%url 'login'%}">Connectez vous</a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'annonce' %}"
+                ><button class="btn ml-lg-4 mt-2 button" id="announceButton">
+                  Deposez votre annonce
+                </button></a
+              >
+            </li>
+
+            {% if user.is_authenticated %}
+              <li class="nav-item dropdown mt-2 ml-2">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <span class="material-icons" style="font-size: 36px;">
+                    account_circle
+                  </span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{{ user.get_absolute_url }}"
+                    >{{user.last_name|capfirst}}</a
+                  >
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'logout' %}">logout</a>
+                </div>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% block content %} {% endblock content %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'ss/js/jquery-3.5.1.js' %}"></script>
+    <script src="{% static 'ss/js/jqvalidator.js' %}"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+
+    {% block javascript %} {% endblock javascript %}
+    <script>
+      const addAnnounceButton = $("#announceButton");
+    
+      addAnnounceButton.on("click", (ev) => {
+        localStorage.setItem("button_clicked", true);
+      });
+    
+      $(window).on("load", () => {
+        const b = localStorage.getItem("button_clicked");
+        if (b) $("#show-error").addClass("d-block");
+        localStorage.clear();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{% extends 'base_generic.html' %} {% block title %} Home {% endblock title %} 
+{% block content %} 
+<main class="container">
+
+  {% if messages %}
+  <div class="alert alert-success alert-dismissible fade show mt-0" role="alert">
+    <span style="font-size: 1.5em;">
+      {% for message in  messages%}
+        {{message}} 
+      {% endfor %}
+    </span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div> 
+  {% endif %} 
+</main>
+
+{% endblock content %}

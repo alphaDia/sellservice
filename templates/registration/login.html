@@ -1,0 +1,72 @@
+{% extends "base_generic.html" %} {% load crispy_forms_tags %} {% load static %}
+{% block title %} Sign-in {% endblock title %} {% block content%} 
+<main class="container">
+  {% if messages %}
+  <div
+    class="alert alert-danger alert-dismissible fade show mt-4 d-none"
+    role="alert"
+    id="show-error"
+  >
+    {% for message in messages %}
+      {{message}}
+    {% endfor %}
+    
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endif %}
+  
+  <div class="mount-alert">
+    <div
+      class="alert alert-danger alert-dismissible fade show mt-4 d-none"
+      role="alert"
+    >
+      Votre adresse mail ou mot de passe est incorrecte
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  
+  <div
+    class="row justify-content-center align-items-center"
+    style="height: 40em;"
+  >
+    <div class="col-lg-4 col-sm-9">
+      <div class="shadow p-5 mt-4 border animate__animated animate__fadeIn">
+        <p class="h2 text-center mb-5">Connexion</p>
+        <form
+          action="{% url 'login' %}"
+          novalidate
+          method="post"
+          id="signupForm"
+          class="mt-4"
+        >
+          <input type="hidden" name="next" value="{{ next }}" />
+          {% csrf_token %}
+          <div class="form-group">
+            {{ form.email|as_crispy_field }}
+          </div>
+          <div class="form-group">
+            {{form.password1|as_crispy_field }}
+            <small><a class="link" href="#">mot de passe oublie?</a></small>
+          </div>
+          <button class="btn w-100 p-2 mb-2 button" type="submit" id="signupbutton">
+            Connecter
+          </button>
+        </form>
+        <div class="my-border"></div>
+        <p class="text-center">Vous n'avez pas de compte ?</p>
+        <div class="d-flex">
+          <a href="{% url 'signup' %}" class="mx-auto"
+            ><button class="btn p-3 button">Creez un Compte</button></a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %} {% block javascript %}
+<script src="{% static 'ss/js/connexion_form.js' %}"></script>
+{% endblock javascript %}

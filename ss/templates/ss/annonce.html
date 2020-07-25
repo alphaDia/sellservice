@@ -1,0 +1,358 @@
+{% extends 'base_generic.html' %} {% load crispy_forms_tags %} {% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'ss/css/announce.css' %}" />
+{% endblock css %} {% block title %} Annonce {% endblock title %} 
+{% block content %}
+<main class="container animate__animated animate__fadeIn">
+  <section>
+    <div class="mt-5 d-sm-none d-md-none d-none d-lg-block">
+      <div class="progress w-75 mx-auto" style="height: 15px;">
+        <div
+          class="progress-bar bg-success"
+          role="progressbar"
+          style="width: 20%;"
+          aria-cookienow="10"
+          aria-cookiemin="0"
+          aria-cookiemax="100"
+        ></div>
+      </div>
+    </div>
+    <div id="annonce-container">
+      <div
+        class="row justify-content-center align-items-center animate__animated animate__fadeInRight"
+        style="height: 500px;"
+        id="select_service"
+      >
+        {% for service in services %}
+        <div class="col-lg-2 col-sm-5 selection mx-3 my-2">
+          <div
+            class="absolute d-flex justify-content-center align-items-center"
+          >
+            <p service-name="{{service}}" class="text-center">
+              {{ service|upper }}
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock content %} {% block javascript %}
+<script>
+  $("#announceForm").validate();
+
+  const form = `<form action="" 
+      method="POST" 
+      class="d-flex justify-content-center align-items-center"
+      style="height: 500px;" id="announceForm" autocomplete="off">
+      {% csrf_token %}
+      <input type="hidden" 
+          name="service-input" 
+          id="type-service" 
+          required 
+          aria-required="true">
+      
+      <input type="hidden"
+          name="categories"
+          id="checked_categorie"
+          required
+          aria-required="true">
+      
+      <div class="animate__animated animate__fadeInRight">
+        <div class="d-flex align-items-center justify-content-center">
+          <div id="stp1">
+            <div id="categories" class="form-group" role="group"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-none">
+        <div class="d-flex align-items-center justify-content-center">
+          <div id="stp2">
+            <div class="form-group" style="width: 500px; max-width: 500px">
+              <label for="title" class="h2">Titre:</label>
+              <input type="text" 
+                class="form-control" 
+                id="title"
+                name="title" 
+                placeholder="Entrez un titre"  
+                aria-required="true">
+            </div>
+
+            <div class="justify-content-center mt-5 d-flex">
+              <!-- back2 unique class name  -->
+              <button class="btn btn-secondary back2 mx-4 w-50" type="button">Prec</button> 
+                  <!-- open2 unique class name -->
+              <button class="btn button open2 w-50" type="button">Suiv</button> 
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="d-none">
+        <div class="d-flex align-items-center justify-content-center">
+          <div id="stp3">
+            <div class="form-group" style="max-width: 500px; width: 600px;">
+              <label for="description" class="h2">Description:</label>
+              <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
+            </div>
+
+            <div class="d-flex justify-content-center mt-5">
+              <!-- back2 unique class name  -->
+              <button class="btn btn-secondary back3 mx-4 w-50" type="button">Prec</button> 
+              <!-- open2 unique class name -->
+              <button class="btn button open3 w-50" type="button">Suiv</button> 
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-none">
+        <div class="d-flex align-items-center justify-content-center">
+          <div id="stp4">
+            <div class="form-group" style="max-width: 500px; width: 600px;">
+              <p class="h2">Telecharger une image</p>
+            </div>
+
+            <div class="d-flex justify-content-center mt-5">
+              <!-- back2 unique class name  -->
+              <button class="btn btn-secondary back4 mx-4 w-50" type="button">Prec</button> 
+              <!-- open2 unique class name -->
+              <button class="btn button open4 w-50" type="submit">Creer</button> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>`;
+
+  function getCookie(name) {
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+
+        if (cookie.substr(0, name.length + 1) === name + "=") {
+          return decodeURIComponent(cookie.substr(name.length + 1));
+        }
+      }
+    }
+  }
+
+  let _cats = [];
+  let _currentWidth = 0;
+
+  function handleChecksClick(ev) {
+    ev.stopPropagation();
+    if (ev.target.nodeName.toLowerCase() === "input")
+      _cats.indexOf(ev.target.value) === -1
+        ? (_cats = [..._cats, ev.target.value])
+        : (_cats = _cats.filter((cat) => cat !== ev.target.value));
+
+    _cats.length > 0
+      ? $(":disabled")
+          .removeAttr("disabled")
+          .css("transition", ".3s ease-in-out")
+      : $(".open1").attr("disabled", true);
+
+    $("#checked_categories").val(_cats.join(" "));
+  }
+
+  function computeProgressBar(add = true) {
+    const progress_bar = $(".progress-bar");
+    //  alert(progress_bar.width())
+
+    if (add) progress_bar.width((_currentWidth += 166.5));
+    else progress_bar.width((_currentWidth -= 166.5));
+    console.log(progress_bar.width());
+  }
+
+  function handleMovingForward(ev, v_form, prev, next) {
+    ev.stopPropagation();
+
+    const $prev = $(prev).parent();
+    const $next = $(next).parent();
+
+    if (v_form.form()) {
+      $prev.addClass("animate__animated animate__fadeOutLeft");
+      $prev
+        .parent()
+        .removeClass(
+          "animate__animated animate__fadeInRight animate__fadeInLeft"
+        )
+        .addClass("d-none");
+
+      $next
+        .parent()
+        .removeClass("d-none")
+        .addClass("animate__animated animate__fadeInRight");
+      $next.removeClass(
+        "animate__animated animate__fadeOutLeft animate__fadeOutRight"
+      );
+
+      computeProgressBar();
+    }
+  }
+
+  function handleBackward(ev, prev, next) {
+    ev.stopPropagation();
+
+    const $prev = $(prev).parent();
+    const $next = $(next).parent();
+
+    $prev.addClass("animate__animated animate__fadeOutLeft");
+    $prev
+      .parent()
+      .removeClass("animate__animated animate__fadeInRight animate__fadeInLeft")
+      .addClass("d-none");
+
+    $next
+      .parent()
+      .removeClass("d-none")
+      .addClass("animate__animated animate__fadeInLeft");
+    $next.removeClass(
+      "animate__animated animate__fadeOutLeft animate__fadeOutRight"
+    );
+
+    computeProgressBar(false);
+  }
+
+  function validation() {
+    return $("#announceForm").validate({
+      rules: {
+        title: {
+          required: true,
+          minlength: 20,
+          maxlength: 50,
+        },
+        description: {
+          required: true,
+          minlength: 200,
+          maxlength: 500,
+        },
+      },
+      messages: {
+        title: {
+          required: "S'il vous plais entrez un titre",
+          minlength: "Donnez un titre un peux descriptif",
+        },
+        description: {
+          required: "Faite une petite de votre experience sur ce domaine",
+          minlength:
+            "Ceci decrit votre experience sur le domaine soyez un peux descriptif",
+        },
+      },
+      errorElement: "div",
+    });
+  }
+
+  function handleSubmit(ev) {
+    ev.preventDefault();
+    ev.preventDefault();
+
+    console.log("hello");
+  }
+
+  const service_container = $("#select_service");
+  const $annonce_container = $("#annonce-container");
+
+  // events
+
+  $annonce_container.on("click", function (ev) {
+    const $content = service_container.html();
+
+    let service_name = null;
+
+    if (ev.target.nodeName.toLowerCase() === "p") {
+      service_container.addClass("animate_animated animate_fadeOut").remove();
+      service_name = $(ev.target).attr("service-name");
+      computeProgressBar();
+
+      $("#service-input").val(service_name);
+
+      $.ajax({
+        type: "POST",
+        url: "{% url 'annonce' %}",
+        data: `service_type=${service_name}`,
+        dataType: "json",
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+
+        success: function (response) {
+          const { success, categories } = response;
+          if (success) {
+            const cats = categories.map((cat, index) => {
+              name = "check";
+              return `<div class="d-inline-block mx-2">
+                      <input type="checkbox" name="${
+                        name + index
+                      }" class="d-none" id="${
+                name + index
+              }" value="${cat}" required aria-required="true">
+                      <label for="${
+                        name + index
+                      }" class="btn border-black">${cat}</label>
+                      </div>`;
+            });
+
+            $annonce_container.html(form); //charge le html dans ce div#annonce-container
+            $("#announceForm").on("submit", handleSubmit); // binding a submit event to form
+            const v_form = validation();
+
+            const $categories = $("#categories");
+
+            $categories
+              .html(cats)
+              .prepend(
+                '<h2 class="text-center  mb-5">Selectionner au moins une categorie</h2>'
+              )
+              .append(
+                '<div class="d-flex justify-content-center mt-5">\
+                  <button class="btn button open1 w-50" type="button" disabled>Next</button> </div>'
+              );
+
+            $categories.on("click", handleChecksClick);
+
+            $(".open1").on("click", function (ev) {
+              handleMovingForward(ev, v_form, "#stp1", "#stp2");
+            });
+            $(".open2").on("click", function (ev) {
+              handleMovingForward(ev, v_form, "#stp2", "#stp3");
+            });
+            $(".open3").on("click", function (ev) {
+              handleMovingForward(ev, v_form, "#stp3", "#stp4");
+            });
+
+            $(".back2").on("click", function (ev) {
+              handleBackward(ev, "#stp2", "#stp1");
+            });
+            $(".back3").on("click", function (ev) {
+              handleBackward(ev, "#stp3", "#stp2");
+            });
+            $(".back4").on("click", function (ev) {
+              handleBackward(ev, "#stp4", "#stp3");
+            });
+          }
+        },
+
+        beforeSend: function () {
+          let spinner = `<div class="d-flex justify-content-center align-items-center"  style="height: 500px;">
+                  <div class="spinner-grow" role="status" id="loading_spinner">
+                      <span class="sr-only">Loading...</span>
+                  </div>
+              </div>`;
+          $("#annonce-container").html(spinner);
+        },
+
+        complete: function () {
+          $("#loading_spinner").remove();
+        },
+
+        error: function (error) {
+          service_container.html($content);
+        },
+      });
+    }
+  });
+  computeProgressBar();
+</script>
+{% endblock javascript %}
