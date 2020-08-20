@@ -20,6 +20,10 @@
   font-weight: bold;
 }
 
+.bg-white {
+  background: #ffffff;
+}
+
 #profile > div:first-child strong {
   position: relative;
   left: 0em;

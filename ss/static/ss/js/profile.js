@@ -12,7 +12,7 @@ $(function () {
   });
 
   const button =
-    '<button type="submit"  class="btn w-100 p-2" id="save-button">Save</button>';
+    '<button type="submit"  class="btn w-100 p-2 button" id="save-button">mise a jour</button>';
 
   const $updateForm = $("#updateProfileForm");
   const url = $updateForm.attr("action");
@@ -20,11 +20,15 @@ $(function () {
   $updateForm.on("submit", function (e) {
     e.preventDefault();
 
+    const fd = new FormData(this);
+
     $.ajax({
       type: "POST",
       url: url,
-      data: $updateForm.serialize(),
-      datatype: "json",
+      data: fd,
+      processData: false,
+      contentType: false,
+      enctype: "multipart/form-data",
       success: function (response) {
         const { success, redirect_to, profileUpdateForm } = response;
         if (success) {
@@ -34,9 +38,7 @@ $(function () {
 
       beforeSend: function () {
         let spinner =
-          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-        spinner +=
-          ' <span class="sr-only">Loading...</span><span> Saving... </span>';
+          "<img src='{% static 'ss/images/small_loading2.svg' %}' alt='loading' />";
         $("#save-button").attr("disabled", true).html(spinner);
       },
 

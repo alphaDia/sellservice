@@ -19,8 +19,8 @@
     />
 
     <link
-    	rel="stylesheet"
-    	href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
     />
 
     <link
@@ -29,84 +29,146 @@
     />
 
     <link rel="stylesheet" href="{% static 'ss/css/general.css' %}" />
+    <link rel="stylesheet" href="{% static 'ss/css/navbar.css' %}" />
+    <link rel="stylesheet" href="{% static 'ss/css/footer.css'%}">
     {% block css %}{% endblock css %}
 
     <title>
       {% block title %} Login {% endblock title %}
     </title>
   </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-      <div class="container">
-        <a class="navbar-brand" href="#">Proffessions</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div style="width: 400px;">
-          <form class="form-inline">
-            <input class="form-control mr-sm-2 w-100" type="search" placeholder="Search" aria-label="Search">
-          </form>
-        </div>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ml-auto">
-            {% if not user.is_authenticated %}
-            <li class="nav-item mt-3">
-              <a class="nav-link" href="{% url 'signup' %}"
-                >Incrivez vous<span class="sr-only">(current)</span></a
-              >
+  <form class="form-inline d-none">
+    <input
+      class="form-control mr-sm-2 w-100"
+      type="search"
+      placeholder="Search"
+      aria-label="Search"
+      width="1000px"
+    />
+  </form>
+  <body id="top">
+    <header  class="shadow" style="margin: 0">
+      <nav id="topNavigation">
+        <ul>
+          <div>
+            <li>
+              <a href="{% url 'index' %}" class="logo">Proffession</a>
             </li>
-            <li class="nav-item mt-3">
-              <a class="nav-link" href="{%url 'login'%}">Connectez vous</a>
+          </div>
+
+          <div>
+            <li style="width: 40em;">
+              <form class="form-inline">
+                <input
+                  class="form-control rounded-rigth rounded-left"
+                  type="search"
+                  placeholder="Trouvez des services"
+                  aria-label="Search"
+                />
+                <a href="#">
+                  <span class="material-icons" id="search_icon">
+                    search
+                  </span>
+                </a>
+              </form>
+            </li>
+
+            {% if not user.is_authenticated %}
+            <li class="">
+              <a class="" href="{% url 'signup' %}">Incrivez vous</a>
+            </li>
+            <li class="">
+              <a class="" href="{%url 'login'%}">Connectez vous</a>
             </li>
             {% endif %}
 
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'annonce' %}"
-                ><button class="btn ml-lg-4 mt-2 button" id="announceButton">
+            <li class="">
+              <a class="" href="{% url 'annonce' %}"
+                ><button class="btn button" id="announceButton">
                   Deposez votre annonce
                 </button></a
               >
             </li>
 
-            {% if user.is_authenticated %}
-              <li class="nav-item dropdown mt-2 ml-2">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <span class="material-icons" style="font-size: 36px;">
-                    account_circle
-                  </span>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{{ user.get_absolute_url }}"
-                    >{{user.last_name|capfirst}}</a
-                  >
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{% url 'logout' %}">logout</a>
-                </div>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
+          </div>
+          <div>
+            {% if user.is_authenticated %} {% if user.profile_image %}
+            <li ><a href="{{user.get_absolute_url}}" >
+              <img src="{{user.profile_image.url}}" class="rounded-circle profile"  id="profile-image"/> 
+            </a></li>
+            {% else %}
+            <li>
+              <a class="" href="{{ user.get_absolute_url}}"
+                >profile</a
+              >
+            </li>
+            {% endif %} {% endif %}
+          </div>
+        </ul>
+      </nav>
+    </header>
 
     {% block content %} {% endblock content %}
+    
+    <footer class="footer">
+      <a href="#top" class="reach_link shadow d-none"><span class="material-icons reach_icon">arrow_upward </span></a>
+      <nav class="footer_nav">
+        <section class="footer_col">
+          <a href="#" class="footer_logo">Proffession</a>
+          <p class="footer_slogan">
+            Notre but aidé les petits
+            business à avoir de la visibilité
+          </p>
+        </section>
+        <section class="footer_col">
+          <div class="footer_col-wrap">
+            <h4 class="footer_col-title">Explorer</h4>
+            <div class="footer_nav-list">
+              <a href="#" class="footer_link">Accueil</a>
+              <a href="#" class="footer_link">A propos</a>
+              <a href="#" class="footer_link">Nous contacté</a>
+              <a href="#" class="footer_link">Nos services</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="footer_col">
+          <div class="footer_col-wrap">
+            <h4 class="footer_col-title">Business</h4>
+            <div class="footer_nav-list">
+              <a href="#" class="footer_link">Lancez mon business</a>
+              <a href="#" class="footer_link">Trouvez des conseils</a>
+              <a href="#" class="footer_link">Trouvez un mentor</a>
+              <a href="#" class="footer_link">Trouvez un associer</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="footer_col">
+          <div class="footer_col-wrap">
+            <h4 class="footer_col-title">Nous Suivre</h4>
+            <div class="footer_nav-list">
+              <a href="#" class="footer_link">Instagram</a>
+              <a href="#" class="footer_link">FaceBook</a>
+              <a href="#" class="footer_link">Twitter</a>
+              <a href="#" class="footer_link">Linkedin</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="footer_col">
+          <div class="footer_col-wrap">
+            <h4 class="footer_col-title">Mention Legale</h4>
+            <div class="footer_nav-list">
+              <a href="#" class="footer_link">terms</a>
+              <a href="#" class="footer_link">politique privée</a>
+            </div>
+          </div>
+        </section>
+        <div class="clear_both"></div>
+        <small class="footer_small">&copy; 2020  X.inc all right reserved</small>
+      </nav>
+    </footer>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -125,17 +187,45 @@
 
     {% block javascript %} {% endblock javascript %}
     <script>
-      const addAnnounceButton = $("#announceButton");
-    
-      addAnnounceButton.on("click", (ev) => {
-        localStorage.setItem("button_clicked", true);
-      });
-    
-      $(window).on("load", () => {
-        const b = localStorage.getItem("button_clicked");
-        if (b) $("#show-error").addClass("d-block");
-        localStorage.clear();
-      });
+      $(function() {
+        const showAnchor = 400
+
+        let isScrolled = false
+
+        const $anchor = $("a[href='#top']");
+
+        $anchor.on("click", function(ev) {
+          $("html, body").animate({
+            scrollTop: $($(this).attr("href")).offset().top,
+          }, 800);
+          return false;
+        })
+
+        window.onscroll = () => {
+          isScrolled = true
+        }
+
+        setInterval(() => {
+
+          if (isScrolled) {
+            isScrolled = false
+
+            if (!(Number.parseInt(window.pageYOffset, 10) >= showAnchor)) {
+
+              if (!$anchor.hasClass("d-none")) {
+                $anchor.removeClass("animate__animated animate__fadeIn")
+                $anchor.addClass("animate__animated animate__fadeOut")
+              }
+              return ;
+            }
+
+            $anchor.removeClass("animate__animated animate__fadeOut d-none");
+            $anchor.addClass("animate__animated animate__fadeIn")
+          }
+        }, 300)
+
+      })
+      
     </script>
   </body>
 </html>

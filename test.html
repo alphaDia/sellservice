@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
+
+<body style="height: 5000px; padding: 10em;">
     <form action="" id="commentForm" method="post" autocomplete="off">
         <div>
             <label for="uname">Name</label>
             <input type="text" name="uname" id="uname" required>
+            <input type="file" name="" id="">
         </div>
         <br>
         <div>
@@ -20,11 +22,34 @@
         <input type="submit" value="submit">
     </form>
 
+    <button>scroll top</button>
+
     <script src="jq.js"></script>
     <script src="validate.js"></script>
     <script>
-        console.log($)
-        $("#commentForm").validate()
+        const commentForm = document.getElementById("commentForm")
+        let isCrolled;
+        window.addEventListener("scroll", function(ev) {
+            isCrolled = true
+
+            {passive: true}
+        })
+
+        setInterval(() => {
+            if (isCrolled) {
+                isCrolled = false
+                console.log(window.pageYOffset)
+                
+                if (Number.parseInt(window.pageYOffset) >= commentForm.offsetTop) 
+                    console.log("hello world!")
+            }
+        }, 300)
+
+        const button = document.querySelector("button");
+        button.onclick = () =>{
+           alert(button.offsetTop)
+        }
+        
     </script>
 </body>
 </html>

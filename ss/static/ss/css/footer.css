@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=Rowdies&display=swap");
+
+.footer {
+  background: #000;
+  color: #9b9b9b;
+  padding: 50px 0;
+  font-size: 12px;
+  margin-top: 15em;
+  width: 100vw;
+}
+
+.footer_nav {
+  height: 25em;
+  max-width: 1300px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.footer_logo {
+  margin-top: 38px;
+  margin-bottom: 15px;
+  display: inline-block;
+  color: #fff;
+  font-size: 2.5em;
+  font-family: "Rowdies", sans-serif;
+}
+
+.footer_logo:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer_col-title {
+  color: #fff;
+  margin: 35px 0;
+  margin-bottom: 4px;
+}
+
+.footer_col {
+  line-height: 15px;
+  float: left;
+  width: 20%;
+}
+
+.clear_both {
+  content: "";
+  clear: both;
+}
+
+.footer_small {
+  display: block;
+  margin-top: 3.5em;
+  color: #9b9b9b;
+  font-size: 12px;
+}
+
+.footer_link {
+  color: #9b9b9b;
+  display: block;
+  font-size: 15px;
+  padding: 7px 0 7px 0;
+  transition: color 0.5s ease;
+}
+
+.footer_link:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer_slogan {
+  font-size: 12px;
+  line-height: 20px;
+  width: 160px;
+  margin: 0 0 30px;
+}

@@ -1,19 +1,185 @@
-{% extends 'base_generic.html' %} {% block title %} Home {% endblock title %} 
-{% block content %} 
-<main class="container">
+{% extends 'base_generic.html' %} {% load static %} {% block title %} Home
+{%endblock title %} {% block content %}
 
+<main class="">
+  {% include 'ss/sub_menu.html' %}
   {% if messages %}
-  <div class="alert alert-success alert-dismissible fade show mt-0" role="alert">
+  <div
+    class="alert container alert-success alert-dismissible fade show mt-0 absolute"
+    role="alert"
+  >
     <span style="font-size: 1.5em;">
-      {% for message in  messages%}
-        {{message}} 
-      {% endfor %}
+      {% for message in messages%} {{message}} {% endfor %}
     </span>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
-  </div> 
-  {% endif %} 
+  </div>
+
+  {% endif %}
+
+  <section class="" id="banner" style="width: 100vw; margin: 0;">
+    <img
+      src="{% static 'ss/images/banner.jpg' %}"
+      alt="Fourni un service en ligne"
+    />
+    <div
+      class="text-cont d-flex justify-content-center align-items-center"
+    ></div>
+  </section>
+  <section class="container how_it_works">
+    <div class="row steps_to_sell mt-4">
+      <div class="col-md-4 col-sm-12">
+        <span class="material-icons s_icon">
+          local_grocery_store
+        </span>
+        <p class="p_under-icon">Contacter un fournisseur de service</p>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <span class="material-icons s_icon">
+          chat
+        </span>
+        <p class="p_under-icon">
+          Discuter via le site ou par toute autre plateforme de chat
+        </p>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <span class="material-icons s_icon">
+          done_all
+        </span>
+        <p class="p_under-icon">
+          Valider la livraison et nous payons le vendeur
+        </p>
+      </div>
+    </section>
+
+    <section
+      class=" w-75 mx-auto some_annonce container"
+    ></section>
+  </div>
+
+  <section class="container mt-5 w-75 mx-auto inspiration">
+    <div class="ins mb-5">
+      <p class="h2 text-center ">voulez vous etre accompagner?</p>
+      <p class="text-center h5">Decouvez nos services pour vous aider a evoluez.</p>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-6 ct my-3">
+        <img src="{% static 'ss/images/change2.jpg' %}" alt="">
+        <div class="ct_text_container d-flex justify-content-center align-items-center">
+          <p class="ct_link">Osez la creativitez</p>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6 ct my-3">
+        <img src="{% static 'ss/images/growth2.jpg' %}" alt="">
+        <div class="ct_text_container d-flex justify-content-center align-items-center">
+          <p class="ct_link">Trouvez des associers</p>
+        </div>
+      </div>
+      <div class="col-md-4 ct col-sm-6 my-3">
+        <img src="{% static 'ss/images/coaching2.jpg' %}" alt="">
+        <div class="ct_text_container d-flex justify-content-center align-items-center">
+          <p class="ct_link">Trouvez des mentors</p>
+        </div>
+      </div>
+    </div>
+  </section> 
+  <!--<section class="sell">
+    <div class=" d-flex justify-content-start align-items-center">
+      <div class="sell_text">
+        <h2 class="mb-5">Vendre Sur Proffesion</h2>
+        <p> 
+          Lorem ipsum dolor
+          Enim accusamus eius aut dolor</p>
+          <p> 
+            Lorem ipsum dolor
+            Enim accusamus eius aut dolor</p>
+            <p> 
+              Lorem ipsum dolor
+              Enim accusamus eius aut dolor</p>
+      </div>
+    </div>-->
+
+  </section>
 </main>
 
-{% endblock content %}
+{% endblock content %} {% block javascript %}
+<script>
+  const ps = [
+    "Trouvez toutes les categories <br /> dont vous voulez.",
+    "Atteignez des milliers de personnes <br /> avec nous.",
+    "Notre mission satisfaire <br /> nos clients.",
+    "Des milliers de services <br /> pour tous vos besoins.",
+  ];
+  let counter = 0;
+
+  window.addEventListener(
+    "load",
+    function () {
+      const div = document.querySelector("section:nth-child(2) > div");
+      div.innerHTML = `<p class="animate__animated animate__fadeIn transition">Des milliers de services <br /> pour tous vos besoins.</p>`;
+
+      setInterval(() => effect(div), 4000);
+
+      //ajax request to load all servicies
+     
+      const p = '<p class="h1 text-center my-5">Les Derniers Annonces</p>';
+      const el = document.querySelector(".some_annonce");
+      el.innerHTML = `${p}<div class='d-flex justify-content-center'> 
+          <img src='{% static 'ss/images/loading.svg'%}' />  
+          <span class="loading">loading</span>  
+        </div>`;
+      
+      fetch("{% url 'create-annonce' %}")
+        .then((response) => response.json())
+        .then((data) => {
+          const {annonce_list} = data
+
+          const list = annonce_list.map((an) => {
+            return `<div class="col-md-4 col-sm-6 my-3">
+              <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src=${an.annonce_image} alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">${an.title}</h5>
+                  <div class="d-flex align-items-center mt-5">
+                    <img class="profile rounded-circle" src=${an.author_image}>
+                    <div class="ml-4">
+                      <span> 
+                       par <a href="${an.profile}">
+                          ${an.author_last_name} ${an.author_name} 
+                        </a>
+                      </span> <br />
+                      <small>rate: 5</small>
+                    </div>
+                  </div>
+                  <br />
+                  <p >publish date: ${an.pub_date}</p>
+                  <a href="#" class="btn button btn-block">Details</a>
+                </div>
+              </div>
+            </div>`
+          }).join("")
+
+
+          let annonces = `${p}<div class='row my-5'>`
+          annonces += list
+          annonces += "</div>"
+          annonces += "<div class='w-75 mx-auto mb-5'><a href='#' class='btn button btn-block'>Voir les autres services</a>"
+
+          el.innerHTML = annonces
+    
+        });
+    },
+    false
+  );
+
+  const effect = (div) => {
+    if (counter === ps.length) {
+      counter = 0;
+      return;
+    }
+    div.innerHTML = `<p class="animate__animated animate__fadeIn transition"> ${ps[counter]} </p>`;
+    counter++;
+  };
+</script>
+{% endblock javascript %}

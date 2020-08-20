@@ -1,13 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Rowdies&display=swap");
+
 :root {
   --second-color: #148653;
   --primary-color: #ffffff;
 }
 
+.reach_top {
+  position: relative;
+}
+
+.reach_link {
+  background-color: #fff;
+  border: none;
+  border: 3px solid;
+  border-radius: 30%;
+  position: fixed;
+  right: 3em;
+  bottom: 5em;
+  z-index: 1;
+  padding: 1em;
+  color: #000;
+}
+
+.reach_link:hover {
+  background-color: var(--second-color);
+  transition: background-color 0.5s ease;
+  border: 3px solid var(--second-color);
+  color: #fff;
+}
+
+.reach_icon {
+  font-size: 3.5em;
+}
+
+.logo {
+  font-family: "Rowdies", sans-serif;
+  font-size: 3em;
+  color: #9b9b9b;
+  transition: 0.5s ease;
+}
+
+.logo:hover {
+  text-decoration: none;
+  color: #000;
+}
+
 body {
-  background: white;
+  background: var(--primary-color);
   margin: 0;
   font-family: "Montserrat_body", sans-serif;
   padding: 0;
+  overflow-x: hidden;
+}
+
+main {
+  position: relative;
+  top: -15px;
 }
 
 a {
@@ -50,9 +98,16 @@ a {
 
 small#hint_id_username,
 small#hint_id_password1,
-small#hint_id_password2,
-#error_1_id_email {
+small#hint_id_password2 {
   display: none;
+}
+
+.profile {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  transform: scale(1.3, 1.2);
+  border: 1px solid black;
 }
 
 .desc {
@@ -73,4 +128,93 @@ small#hint_id_password2,
 .dropdown-item:hover {
   color: #ffffff;
   background-color: var(--second-color);
+}
+
+.wrapper,
+.ct {
+  position: relative;
+}
+
+.image-wrapper {
+  position: absolute;
+  top: -1.2em;
+}
+
+.absolute {
+  position: absolute;
+  top: 0;
+  width: 500px;
+}
+
+.ct_text_container {
+  position: absolute;
+  top: 0;
+  background: #000;
+  opacity: 0.5;
+  height: 100%;
+  width: 300px;
+}
+
+.ct_link {
+  color: #ffffff;
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.p_under-icon {
+  line-height: 1.1em;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  word-spacing: 0.2em;
+  padding: 5px;
+  font-family: "Rowdies" sans-serif;
+}
+
+.s_icon {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  font-size: 5em;
+  color: var(--second-color);
+}
+
+.some_annonce {
+  position: relative;
+}
+
+.loading {
+  display: inline-block;
+  position: absolute;
+  font-size: 1.7em;
+  font-weight: lighter;
+  padding: auto;
+  top: 5.5em;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  transition: 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.sell {
+  position: relative;
+  bottom: -12.2em;
+  height: 500px;
+}
+
+.sell_text {
+  color: #fff;
+  padding: 10px;
+  font-weight: bold;
+  clip-path: circle(40% at 0% 100%);
+  height: 100%;
+  background: var(--second-color);
+}
+
+@media (max-width: 560px) {
+  .loading {
+    top: 7.5em;
+  }
 }

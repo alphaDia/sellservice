@@ -1,40 +1,137 @@
-{% extends "base_generic.html" %} 
-{% load crispy_forms_tags %} 
-{% load static %}
-
-{% block title %}
-  Sign-out
-{% endblock title %}
-  
-
-{% block content %}
-  <main class="container">
-    <div
-      class="row justify-content-center align-items-center"
-      style="height: 40em;"
-    >
-      <div class="col-lg-5">
-        <div class=" shadow p-5 mt-4 border animate__animated animate__fadeIn">
-          <p class="h2 text-center mb-5">Inscription</p>
-          <form action="{% url 'signup' %}" method="post" novalidate id="signupForm", autocomplete="off">
-            {% csrf_token %} {% for field in form %} {{ field|as_crispy_field}} 
-            {%endfor %}
-            <button class="btn w-100 p-2 my-2 button" type="button" id="signupbutton">
-              S'inscrire
-            </button>
-          </form>
-          <div class="d-flex mt-4">
-            <p class="text-center mt-2">Vous avez deja un compte ?</p>
-            <a href="{% url 'login' %}" class="mx-auto"
-              ><button class="btn p-2 ml-2 button">Connectez vous</button></a
-            >
-          </div>
+{% extends "base_generic.html" %} {% load crispy_forms_tags %} {% load static %}
+{% block title %} Sign-out {% endblock title %} {% block content %}
+<main class="container">
+  <div
+    class="row justify-content-center align-items-center"
+    style="height: 40em;"
+  >
+    <div class="col-lg-5">
+      <div class="shadow p-5 mt-4 border animate__animated animate__fadeIn">
+        <p class="h2 text-center mb-5">Inscription</p>
+        <form
+          action="{% url 'signup' %}"
+          method="post"
+          novalidate
+          id="signupForm"
+          ,
+          autocomplete="off"
+        >
+          {% csrf_token %} {% for field in form %} {{ field|as_crispy_field}}
+          {%endfor %}
+          <button
+            class="btn w-100 p-2 my-2 button"
+            type="button"
+            id="signupbutton"
+          >
+            S'inscrire
+          </button>
+        </form>
+        <div class="d-flex mt-4">
+          <p class="text-center mt-2">Vous avez deja un compte ?</p>
+          <a href="{% url 'login' %}" class="mx-auto"
+            ><button class="btn p-2 ml-2 button">Connectez vous</button></a
+          >
         </div>
       </div>
     </div>
-  </main>
-  {% endblock content%}
-  {% block javascript %} 
-    <script src="{% static 'ss/js/connexion_form.js' %}"></script>
+  </div>
+</main>
+{% endblock content%} {% block javascript %}
+<!--<script src="{% static 'ss/js/connexion_form.js' %}"></script> -->
+<script>
+  $(function () {
+    const $signupForm = $("#signupForm");
+    const url = $signupForm.attr("action");
 
-  {% endblock javascript %}
+    //$signupForm.hide().show("fast");
+
+    /*$("#id_password1").attr({
+    placeholder: "password",
+  });
+  $("#id_password2").attr({
+    placeholder: "confirm password",
+    ariaLabel: "confirmez votre mot de passe",
+  });*/
+
+    const button =
+      '<button type="button" class="btn w-100 p-2 mb-2 button" id="signupbutton">Submit</button>';
+
+    const link =
+      '<small><a class="link" href="#">mot de passe oublie?</a></small>';
+
+    const v_form = $signupForm.validate({
+      rules: {
+        email: {
+          required: true,
+          email: true,
+        },
+        first_name: "required",
+        last_name: "required",
+        password1: {
+          required: true,
+          minlength: 8,
+        },
+        password2: {
+          required: true,
+          minlength: 8,
+          equalTo: "#id_password1",
+        },
+      },
+      messages: {
+        email: {
+          required: "Veillez entre votre adresse email",
+          email: "adresse email invalid",
+        },
+        first_name: { required: "Entrez votre nom" },
+        last_name: { required: "Entrez votre prenom" },
+        password1: {
+          required: "Entrez un mot de passe",
+          minlength: "Votre mot de passe doit contenire au moins 8 caractere et contenir au moin 1 chiffre",
+        },
+        password2: {
+          required: "confirmer votre mot de passe",
+          minlength: "Votre mot de passe doit contenire au moins 8 caractere",
+          equalTo: "Veillez saisir un mot de passe identique au premier",
+        },
+      },
+      errorelement: "div",
+      errorClass: "text-danger",
+    });
+
+    $("#signupbutton").on("click", function (e) {
+      e.stopPropagation();
+
+      if (v_form.form()) {
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: $signupForm.serialize(),
+          datatype: "json",
+          success: function (response) {
+            const { success, form_html, redirect_url } = response;
+            if (!success) {
+              $signupForm.html(form_html).append(button);
+              $(".password_lost").next().after(link);
+              $(".alert-danger").removeClass("d-none").addClass("d-block");
+            } else window.location = `${redirect_url}`;
+          },
+
+          beforeSend: function () {
+            let spinner = "<img src='{% static 'ss/images/small_loading2.svg' %}' alt='loading' />";
+            $("#signupbutton").attr("disabled", true).html(spinner);
+          },
+
+          complete: function () {
+            $("#signupbutton").attr("disabled", false).html("Connecter");
+          },
+
+          error: function () {
+            alert("error occured");
+          },
+        });
+      }
+    });
+  });
+</script>
+
+{% endblock javascript %}

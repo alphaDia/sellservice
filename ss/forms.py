@@ -1,7 +1,6 @@
 from django import forms
-from crispy_forms.helper import FormHelper
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Annonce
+from .models import User, AnnonceModel
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -10,7 +9,11 @@ class UserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = User
-        fields = ('email',)
+        fields = ('email', "password1", "password2")
+        labels = {
+            "password1": _("Mot de passe"),
+            "password2": _("Confirmation")
+        }
 
 
 class UserChangeForm(UserChangeForm):
@@ -23,16 +26,29 @@ class UserChangeForm(UserChangeForm):
 class SignupForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
+
         for field in self.fields.keys():
             self.fields[field].required = False
 
+            if 'password1' == field:
+                self.fields[field].label = _('Mot de passe')
+
+            if 'password2' == field:
+                self.fields[field].label = _('Confirmation')
+
     class Meta(UserCreationForm):
         model = User
-        fields = ('email', 'first_name', 'last_name',)
+        fields = ('email', 'first_name', 'last_name')
         widgets = {
             'email': forms.EmailInput(attrs={'aria-label': 'email'}),
             'first_name': forms.TextInput(attrs={'aria-label': 'nom'}),
             'last_name': forms.TextInput(attrs={'aria-label': 'prenom'}),
+        }
+
+        error_messages = {
+            'email': {
+                'invalid': 'utilisateur existe deja',
+            }
         }
 
 
@@ -56,23 +72,11 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name',
-                  'description', 'tel_number', ]
-
-    def clean_tel_number(self):
-        import re
-
-        tel_number = self.cleaned_data.get('tel_number')
-        if not re.match(r"(|^\00|\+\d{3}\d{9}$)", tel_number, re.M):
-            raise ValidationError(
-                _("Sil vous plait entrer un numero correcte"))
-
-        """if not re.match(r'', tel_number):
-            raise ValidationError(_("Ce numero est incorrecte"))"""
-
-    def clean_description(self):
-        pass
+        fields = ['profile_image', 'first_name', 'last_name',
+                  'biographie', 'tel_number', ]
 
 
-class dropeAnnounceForm(forms.Form):
-    pass
+class AnnonceForm(forms.ModelForm):
+    class Meta:
+        model = AnnonceModel
+        fields = ['categorie', 'title', 'description', 'annonce_image']

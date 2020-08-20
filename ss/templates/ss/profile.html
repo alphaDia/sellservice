@@ -22,41 +22,55 @@
       
     {% endif %}
       
-    
-    <div class="row mt-5">
-      <div class="col-md-2">
-        <nav class="border">
-          <ul class="navbar-nav side-navbar">
-            <li class="nav-item">
-              <a class="nav-link active-link px-3" href="#profile">Profile</a>
+    <div style="height: 700px;">
+      <div class="row mt-5">
+        <div class="col-md-2">
+          <nav class="border">
+            <ul class="navbar-nav side-navbar">
+              <li class="nav-item">
+                <a class="nav-link active-link px-3" href="#profile">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link px-3" href="#update-profile">Update Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link px-3" href="#annonces"
+                  >Annonce <span class="badge badge-secondary">3</span></a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+      
+        <div style="height: 40px; visibility: hidden;">""</div>
+        <!--show profile detail -->
+        <div class="col-md-4 active mx-auto mt-md-4 shadow p-4 border animate__animated animate__fadeIn wrapper" id="profile">
+          <div class="row justify-content-center mb-5">
+            <li class="image image-wrapper" style="list-style: none; margin: 0 auto;"> 
+              <img src="{{user.profile_image.url}}" alt="profile" width="60" height="60"  class="rounded-circle"/>
+              <!-- <strong>{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</strong> -->
             </li>
-            <li class="nav-item">
-              <a class="nav-link px-3" href="#update-profile">Update Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link px-3" href="#annonces"
-                >Annonce <span class="badge badge-secondary">3</span></a
-              >
-            </li>
-          </ul>
-        </nav>
-      </div>
-    
-      <div style="height: 40px; visibility: hidden;">""</div>
-      <!--show profile detail -->
-        <div class="col-md-4 active mx-auto shadow p-4 border animate__animated animate__fadeIn" id="profile">
-          <div>
-            <i class="material-icons" style="font-size: 100px;">account_circle</i>
-            <strong>{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</strong>
           </div>
-    
+          
+          
+  
           <p class="mt-4">
-            <strong>email:</strong><br />
+            <strong>Nom:</strong>
+            <span class="text-muted">{{user.first_name}}</span>
+          </p>
+  
+          <p class="mt-4">
+            <strong>Prenom:</strong>
+            <span class="text-muted">{{user.last_name}}</span>
+          </p>
+  
+          <p class="mt-4">
+            <strong>email:</strong>
             <span class="text-muted">{{user.email}}</span>
           </p>
     
           <p class="mt-4">
-            <strong>Numero:</strong><br />
+            <strong>Numero:</strong>
             {% if user.tel_number %} <span class="text-muted">{{user.tel_number}}</span>  
             {% else %}
               <span class="text-muted">
@@ -65,47 +79,97 @@
               </span>
             {% endif %}
           </p>
-    
-          <p class="mt-4 ">
-            <strong>Promotteur:</strong><br />
-            {% if user.promotteur %} <span class="text-muted">Oui</span>  {% else %} <span class="text-muted">Non</span> {% endif %}
-          </p>
       
       
           <p class="mt-4">
             <strong>Biographie:</strong><br />
-            {% if user.description %}
-              <span class="text-muted ">{{user.description}}</span>
+            {% if user.biographie %}
+              <span class="text-muted ">{{user.biographie}}</span>
             {% else %}
               <span> Update your biographie to help people know you well </sapn>
             {% endif %}
           </p>
+        </div>
+      
         
-      </div>
-    
+        <!-- update profile page -->
+        
+        <div class="col-md-8 p-4  mt-md-3 mx-auto  animate__animated animate__fadeIn" id="update-profile" style="display: none;">
+          <form
+            action="{% url 'profile' user.id %}"
+            method="post"
+            novalidate
+            id="updateProfileForm"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %} {% for field in form %} {{field|as_crispy_field}} {% endfor %} 
+            <button type="submit" class="btn button w-100 p-2" id="save-button">mise a jour</button>
+          </form>
+        </div>
       
-      <!-- update profile page -->
-      
-      <div class="col-md-4 p-4 mx-auto shadow border animate__animated animate__fadeIn" id="update-profile" style="display: none;">
-        <form
-          action="{% url 'profile' user.id %}"
-          method="post"
-          novalidate
-          id="updateProfileForm"
-        >
-          {% csrf_token %} {% for field in form %} {{field|as_crispy_field}} {% endfor %}
-          <button type="submit" class="btn button w-100 p-2" id="save-button">Save</button>
-        </form>
-      </div>    
-      
-      
-    
-      <!-- show annonces-->
-      <div class="col-md-4 p-4 mx-auto animate__animated animate__fadeIn" id="annonces" style="display: none;">
-        <p>Aucune annonce disponible pour le moment</p>
+        <!-- show annonces-->
+        <div class="col-md-4 p-4 mt-md-4 mx-auto animate__animated animate__fadeIn" id="annonces" style="display: none;">
+          <p>Aucune annonce disponible pour le moment</p>
+        </div>
       </div>
     </div>
   </main>
 {% endblock content %} {% block javascript %}
-<script src="{% static 'ss/js/profile.js' %}"></script>
+<script>
+  $(function () {
+  $(".side-navbar").on("click", function (ev) {
+    $(".active-link").removeClass("active-link");
+    const href = $(ev.target).addClass("active-link").attr("href");
+
+    if (!$(href).hasClass("active")) {
+      $(".active").removeClass("active").hide();
+      $(href).addClass("active");
+
+      $(href).show("fast");
+    }
+  });
+
+  const button =
+    '<button type="submit"  class="btn w-100 p-2 button" id="save-button">mise a jour</button>';
+
+  const $updateForm = $("#updateProfileForm");
+  const url = $updateForm.attr("action");
+
+    $updateForm.on("submit", function (e) {
+      e.preventDefault();
+
+      const fd = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: fd,
+        processData: false,
+        contentType: false,
+        enctype: "multipart/form-data",
+        success: function (response) {
+          const { success, redirect_to, profileUpdateForm } = response;
+          if (success) {
+            location = redirect_to;
+          } else $updateForm.html(profileUpdateForm).append(button);
+        },
+
+        beforeSend: function () {
+          let spinner =
+            "<img src='{% static 'ss/images/small_loading2.svg' %}' alt='loading' />";
+          $("#save-button").attr("disabled", true).html(spinner);
+        },
+
+        complete: function () {
+          $("#save-button").attr("disabled", false).html("Save");
+        },
+
+        error: function () {
+          alert("error occured");
+        },
+      });
+    });
+  });
+
+</script>
 {% endblock javascript %}

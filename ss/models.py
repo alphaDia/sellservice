@@ -6,21 +6,25 @@ from . import managers
 from django.utils import timezone
 
 
+def user_directory_path(user, filename):
+    return "images/user_{0}/{1}".format(user.id, filename)
+
+
 class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(_('Adress mail'), unique=True)
     first_name = models.CharField(_('Nom'), max_length=100, default="")
     last_name = models.CharField(_('Prenom'), max_length=100, default="")
     password1 = models.CharField(_('Password'), max_length=255, default="")
-    description = models.TextField(
+    biographie = models.TextField(
         _('Bio'), help_text="faite une description de vous",  max_length=400, default=" ")
     tel_number = models.CharField(
-        _("Numero Tel"), help_text="Numero: (224)", default=" ", max_length=15)
-    avatar = models.ImageField(_('image'), default="")
+        _("Numero Tel"), help_text="Numero: (224)", default="", max_length=15)
+    profile_image = models.ImageField(
+        _("Image du profil"), upload_to=user_directory_path, default="")
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
-    promotteur = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -55,39 +59,37 @@ class Service(models.Model):
         return self.service_type
 
 
-class Annonce(models.Model):
-    service = models.CharField(
-        max_length=200, null=False, blank=False, help_text="the publish service type")
+def user_directory_path2(instance, filename):
+    return "annonce/images/user_{0}/{1}".format(instance.user.id, filename)
 
-    categorie = models.CharField(max_length=300, blank=False, null=False,
-                                 help_text="possible categorie of the publish service")
 
-    titre = models.CharField(max_length=100, blank=False, null=False,
-                             help_text="Mettez un titre accrocheur sur votre annonce")
+class AnnonceModel(models.Model):
+    categorie = models.CharField(max_length=100, blank=False, null=False)
 
-    parcours = models.TextField(max_length=400, blank=False, null=False,
-                                help_text="Decrivez votre parcours")
+    title = models.CharField(_('titre'), max_length=100, blank=False, null=False,
+                             help_text="Donnez un titre a votre annonce", default="")
+
+    description = models.TextField(max_length=400, blank=False, null=False,
+                                   help_text="Decrivez votre annonce", default="")
 
     publish_date = models.DateTimeField(default=timezone.now)
 
     user = models.ForeignKey(
         User, on_delete=models.CASCADE)
 
+    annonce_image = models.ImageField(
+        upload_to=user_directory_path2, default="")
+
     def __str__(self):
-        return self.titre
+        return self.title
+
+
+class Interet(models.Model):
+    annonce = models.ForeignKey(AnnonceModel, on_delete=models.CASCADE)
+    date = models.DateTimeField(default=timezone.now)
 
 
 class Notification(models.Model):
     notif_content = models.TextField(max_length=300, blank=False, null=False)
-    simple_user = models.ManyToManyField(
-        User, through="User_Notification")
+    interet = models.ForeignKey(Interet, on_delete=models.CASCADE)
     isRead = models.BooleanField(default=False)
-
-
-class User_Notification(models.Model):
-    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField(verbose_name="notif date", auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.notification.notif_content} {self.user.email}'

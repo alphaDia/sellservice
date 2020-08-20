@@ -3,13 +3,13 @@ from . import models
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
 from .forms import UserCreationForm, UserChangeForm, SignupForm
-from .models import User, Annonce, Service, User_Notification, Categories, Notification
+from .models import User, AnnonceModel, Service, Categories, Notification, Interet
 
 
-admin.site.register(Annonce)
-admin.site.register(User_Notification)
+admin.site.register(AnnonceModel)
 admin.site.register(Notification)
 admin.site.register(Categories)
+admin.site.register(Interet)
 
 
 class CategorieInline(admin.TabularInline):
@@ -32,7 +32,7 @@ class CustomUserAdmin(UserAdmin):
     form = UserChangeForm
     model = User
 
-    list_display = ('email', 'is_staff', 'is_active', 'promotteur')
+    list_display = ('email', 'is_staff', 'is_active')
     list_filter = ('email', 'is_staff', 'is_active',)
 
     fieldsets = (

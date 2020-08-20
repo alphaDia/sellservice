@@ -1,28 +1,30 @@
 {% extends 'base_generic.html' %} {% load crispy_forms_tags %} {% load static %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'ss/css/announce.css' %}" />
+<link rel="stylesheet" href="{% static 'ss/css/jquery-te-1.4.0.css' %}">
 {% endblock css %} {% block title %} Annonce {% endblock title %} 
 {% block content %}
 <main class="container animate__animated animate__fadeIn">
+  
   <section>
     <div class="mt-5 d-sm-none d-md-none d-none d-lg-block">
       <div class="progress w-75 mx-auto" style="height: 15px;">
         <div
-          class="progress-bar bg-success"
-          role="progressbar"
-          style="width: 20%;"
-          aria-cookienow="10"
-          aria-cookiemin="0"
-          aria-cookiemax="100"
+        class="progress-bar bg-success"
+        role="progressbar"
+        style="width: 20%;"
+        aria-cookienow="10"
+        aria-cookiemin="0"
+        aria-cookiemax="100"
         ></div>
       </div>
     </div>
-    <div id="annonce-container">
+    <div id="annonce-container" style="margin-top: 5em;">
       <div
         class="row justify-content-center align-items-center animate__animated animate__fadeInRight"
-        style="height: 500px;"
+        style="height: auto;"
         id="select_service"
-      >
+        >
         {% for service in services %}
         <div class="col-lg-2 col-sm-5 selection mx-3 my-2">
           <div
@@ -39,13 +41,15 @@
   </section>
 </main>
 {% endblock content %} {% block javascript %}
+<script src="{% static 'ss/js/jquery-te-1.4.0.min.js'%} "></script>
 <script>
-  $("#announceForm").validate();
+  //$("#announceForm").validate();
 
   const form = `<form action="" 
       method="POST" 
+      enctype="multipart/form-data"
       class="d-flex justify-content-center align-items-center"
-      style="height: 500px;" id="announceForm" autocomplete="off">
+      style="height: 700px;" id="announceForm" autocomplete="off">
       {% csrf_token %}
       <input type="hidden" 
           name="service-input" 
@@ -54,7 +58,7 @@
           aria-required="true">
       
       <input type="hidden"
-          name="categories"
+          name="categorie"
           id="checked_categorie"
           required
           aria-required="true">
@@ -91,11 +95,11 @@
       </div>
   
       <div class="d-none">
-        <div class="d-flex align-items-center justify-content-center">
+        <div class="d-flex align-items-center justify-content-center"> 
           <div id="stp3">
-            <div class="form-group" style="max-width: 500px; width: 600px;">
+            <div class="form-group" style="max-width: 1000px; width: 600px">
               <label for="description" class="h2">Description:</label>
-              <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
+              <textarea name="description" id="description" required="false"  col="50" row="50" class="form-control" style="width: 900px; height: 300px;"></textarea>
             </div>
 
             <div class="d-flex justify-content-center mt-5">
@@ -113,18 +117,20 @@
           <div id="stp4">
             <div class="form-group" style="max-width: 500px; width: 600px;">
               <p class="h2">Telecharger une image</p>
+              <input type="file" id="annonce_image" name="annonce_image" class="annonce_image" />
             </div>
 
             <div class="d-flex justify-content-center mt-5">
               <!-- back2 unique class name  -->
               <button class="btn btn-secondary back4 mx-4 w-50" type="button">Prec</button> 
               <!-- open2 unique class name -->
-              <button class="btn button open4 w-50" type="submit">Creer</button> 
+              <button class="btn button open4 w-50" type="submit" id="submit_annonce">Enregirstrer</button> 
             </div>
           </div>
         </div>
       </div>
     </form>`;
+
 
   function getCookie(name) {
     if (document.cookie && document.cookie !== "") {
@@ -139,7 +145,7 @@
     }
   }
 
-  let _cats = [];
+  let _cats = []; // will contain selected categories
   let _currentWidth = 0;
 
   function handleChecksClick(ev) {
@@ -149,50 +155,52 @@
         ? (_cats = [..._cats, ev.target.value])
         : (_cats = _cats.filter((cat) => cat !== ev.target.value));
 
-    _cats.length > 0
+    _cats.length === 1
       ? $(":disabled")
           .removeAttr("disabled")
-          .css("transition", ".3s ease-in-out")
+          .css("transition", ".3s ease")
       : $(".open1").attr("disabled", true);
-
-    $("#checked_categories").val(_cats.join(" "));
+    
+    if (_cats.length === 1)
+      $("#checked_categorie").val(_cats.join(" "));
+  
   }
 
   function computeProgressBar(add = true) {
     const progress_bar = $(".progress-bar");
     //  alert(progress_bar.width())
 
-    if (add) progress_bar.width((_currentWidth += 166.5));
-    else progress_bar.width((_currentWidth -= 166.5));
-    console.log(progress_bar.width());
+    add ? progress_bar.width((_currentWidth += 166.5))
+    : progress_bar.width((_currentWidth -= 166.5));
+    
   }
 
-  function handleMovingForward(ev, v_form, prev, next) {
+  function handleMovingForward(ev, prev, next) {
     ev.stopPropagation();
-
+    console.log("hello world")
     const $prev = $(prev).parent();
     const $next = $(next).parent();
 
-    if (v_form.form()) {
-      $prev.addClass("animate__animated animate__fadeOutLeft");
-      $prev
-        .parent()
-        .removeClass(
-          "animate__animated animate__fadeInRight animate__fadeInLeft"
-        )
-        .addClass("d-none");
+    
+    $prev.addClass("animate__animated animate__fadeOutLeft");
+    $prev
+      .parent()
+      .removeClass(
+        "animate__animated animate__fadeInRight animate__fadeInLeft"
+      )
+    .addClass("d-none");
 
-      $next
-        .parent()
-        .removeClass("d-none")
-        .addClass("animate__animated animate__fadeInRight");
-      $next.removeClass(
-        "animate__animated animate__fadeOutLeft animate__fadeOutRight"
-      );
+    $next
+      .parent()
+      .removeClass("d-none")
+      .addClass("animate__animated animate__fadeInRight");
+    $next.removeClass(
+      "animate__animated animate__fadeOutLeft animate__fadeOutRight"
+    );
 
-      computeProgressBar();
-    }
+    computeProgressBar();
   }
+  
 
   function handleBackward(ev, prev, next) {
     ev.stopPropagation();
@@ -217,18 +225,16 @@
     computeProgressBar(false);
   }
 
-  function validation() {
+  /*function validation() {
     return $("#announceForm").validate({
       rules: {
         title: {
           required: true,
           minlength: 20,
-          maxlength: 50,
         },
         description: {
           required: true,
           minlength: 200,
-          maxlength: 500,
         },
       },
       messages: {
@@ -244,13 +250,43 @@
       },
       errorElement: "div",
     });
-  }
+  }*/
 
   function handleSubmit(ev) {
     ev.preventDefault();
-    ev.preventDefault();
 
-    console.log("hello");
+    const dt = new FormData(this)
+
+    $.ajax({
+      type: "POST",
+      url: "{% url 'create-annonce'%}",
+      data: dt,
+      processData: false,
+      contentType: false,
+      enctype: "multipart/form-data",
+      success: function (response) {
+        const { success, redirect_to } = response;
+
+        if (success) {
+          location = redirect_to + "#annonces";
+        } else $updateForm.html(profileUpdateForm).append(button);
+        return ;
+      },
+
+      beforeSend: function () {
+        let spinner =
+          "<img src='{% static 'ss/images/small_loading2.svg' %}' alt='loading' />";
+        $("#submit_annonce").attr("disabled", true).html(spinner);
+      },
+
+      complete: function () {
+        $("#save-button").attr("disabled", false).html("Save");
+      },
+
+      error: function () {
+        alert("error occured");
+      },
+    });
   }
 
   const service_container = $("#select_service");
@@ -259,6 +295,8 @@
   // events
 
   $annonce_container.on("click", function (ev) {
+    if (!ev.target === "input")
+      ev.preventDefault()
     const $content = service_container.html();
 
     let service_name = null;
@@ -273,13 +311,14 @@
       $.ajax({
         type: "POST",
         url: "{% url 'annonce' %}",
-        data: `service_type=${service_name}`,
+        data: `service_type=${encodeURIComponent(service_name)}`,
         dataType: "json",
         headers: { "X-CSRFToken": getCookie("csrftoken") },
 
         success: function (response) {
           const { success, categories } = response;
           if (success) {
+           
             const cats = categories.map((cat, index) => {
               name = "check";
               return `<div class="d-inline-block mx-2">
@@ -287,7 +326,7 @@
                         name + index
                       }" class="d-none" id="${
                 name + index
-              }" value="${cat}" required aria-required="true">
+              }" value="${cat}">
                       <label for="${
                         name + index
                       }" class="btn border-black">${cat}</label>
@@ -295,15 +334,15 @@
             });
 
             $annonce_container.html(form); //charge le html dans ce div#annonce-container
+            //$(".jqte-test").jqte()
             $("#announceForm").on("submit", handleSubmit); // binding a submit event to form
-            const v_form = validation();
+            //const v_form = validation();
 
             const $categories = $("#categories");
 
             $categories
               .html(cats)
               .prepend(
-                '<h2 class="text-center  mb-5">Selectionner au moins une categorie</h2>'
               )
               .append(
                 '<div class="d-flex justify-content-center mt-5">\
@@ -313,13 +352,13 @@
             $categories.on("click", handleChecksClick);
 
             $(".open1").on("click", function (ev) {
-              handleMovingForward(ev, v_form, "#stp1", "#stp2");
+              handleMovingForward(ev, "#stp1", "#stp2");
             });
             $(".open2").on("click", function (ev) {
-              handleMovingForward(ev, v_form, "#stp2", "#stp3");
+              handleMovingForward(ev, "#stp2", "#stp3");
             });
             $(".open3").on("click", function (ev) {
-              handleMovingForward(ev, v_form, "#stp3", "#stp4");
+              handleMovingForward(ev, "#stp3", "#stp4");
             });
 
             $(".back2").on("click", function (ev) {
@@ -336,9 +375,7 @@
 
         beforeSend: function () {
           let spinner = `<div class="d-flex justify-content-center align-items-center"  style="height: 500px;">
-                  <div class="spinner-grow" role="status" id="loading_spinner">
-                      <span class="sr-only">Loading...</span>
-                  </div>
+                  <img src="{% static 'ss/images/loading.svg' %}" alt="loading image" />
               </div>`;
           $("#annonce-container").html(spinner);
         },
