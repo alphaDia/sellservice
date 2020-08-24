@@ -1,20 +1,6 @@
 {% extends "base_generic.html" %} {% load crispy_forms_tags %} {% load static %}
 {% block title %} Sign-in {% endblock title %} {% block content%}
 <main class="container">
-  {% if messages %}
-  <div
-    class="alert alert-danger alert-dismissible fade show mt-4 d-none"
-    role="alert"
-    id="show-error"
-  >
-    {% for message in messages %} {{message}} {% endfor %}
-
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {% endif %}
-
   <div class="mount-alert">
     <div
       class="alert alert-danger alert-dismissible fade show mt-4 d-none"
@@ -43,22 +29,24 @@
           action="{% url 'login' %}"
           novalidate
           method="post"
-          id="signupForm"
+          id="signInForm"
           class="mt-4"
         >
           <input type="hidden" name="next" value="{{ next }}" />
           {% csrf_token %}
-          <div class="form-group">
-            {{ form.email|as_crispy_field }}
-          </div>
-          <div class="form-group">
-            {{form.password1|as_crispy_field }}
-            <small><a class="link" href="#">mot de passe oublie?</a></small>
+          <div class="form-content">
+            <div class="form-group">
+              {{ form.email|as_crispy_field }}
+            </div>
+            <div class="form-group">
+              {{form.password1|as_crispy_field }}
+              <small><a class="link" href="#">mot de passe oublie?</a></small>
+            </div>
           </div>
           <button
             class="btn w-100 p-2 mb-2 button"
             type="submit"
-            id="signupbutton"
+            id="signInButton"
           >
             Connecter
           </button>
@@ -77,8 +65,8 @@
 {% endblock content %} {% block javascript %}
 <!--<script src="{% static 'ss/js/connexion_form.js' %}"></script>-->
 <script>
-  const $signupForm = $("#signupForm");
-  const url = $signupForm.attr("action");
+  const $signInForm = $("#signInForm");
+  const url = $signInForm.attr("action");
 
   //$signupForm.hide().show("fast");
 
@@ -91,7 +79,7 @@ $("#id_password2").attr({
 });*/
 
   const button =
-    '<button type="button" class="btn w-100 p-2 mb-2 button" id="signupbutton">Submit</button>';
+    '<button type="button" class="btn w-100 p-2 mb-2 button" id="signInButton">Connecter</button>';
 
   const link =
     '<small><a class="link" href="#">mot de passe oublie?</a></small>';
@@ -103,19 +91,19 @@ $("#id_password2").attr({
     '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
   alert_danger += '<span aria-hidden="true">&times;</span></button></div>';
 
-  $("#signupbutton").on("click", function (e) {
-    e.stopPropagation();
+  $("#signInButton").on("click", function (e) {
     e.preventDefault();
 
     $.ajax({
       type: "POST",
       url: url,
-      data: $signupForm.serialize(),
+      data: $signInForm.serialize(),
       datatype: "json",
       success: function (response) {
         const { success, form_html, redirect_url } = response;
         if (!success) {
-          $signupForm.html(form_html).append(button);
+          $signInForm.find(".form-content").html(form_html)
+
           $(".password_lost").next().after(link);
           $(".alert-danger").removeClass("d-none").addClass("d-block");
         } else window.location = `${redirect_url}`;
@@ -123,11 +111,11 @@ $("#id_password2").attr({
 
       beforeSend: function () {
         let spinner = "<img src='{% static 'ss/images/small_loading2.svg' %}' alt='loading' />";
-        $("#signupbutton").attr("disabled", true).html(spinner);
+        $("#signInButton").attr("disabled", true).html(spinner);
       },
 
       complete: function () {
-        $("#signupbutton").attr("disabled", false).html("Connecter");
+        $("#signInButton").attr("disabled", false).html('Connecter');
       },
 
       error: function () {

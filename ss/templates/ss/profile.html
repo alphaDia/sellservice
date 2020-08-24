@@ -6,23 +6,7 @@
 {% endblock css %} {% block content %}
 
   <main class="container animate__animated animate__fadeIn">
-
-    {% if messages %}
-    
-    <div class="alert alert-success alert-dismissible fade show mt-0" role="alert">
-      <span style="font-size: 1.5em;">
-        {% for message in  messages %}
-          {{message}} 
-        {% endfor %}
-      </span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-      
-    {% endif %}
-      
-    <div style="height: 700px;">
+      <div style="height: 700px;">
       <div class="row mt-5">
         <div class="col-md-2">
           <nav class="border">
@@ -46,10 +30,23 @@
         <!--show profile detail -->
         <div class="col-md-4 active mx-auto mt-md-4 shadow p-4 border animate__animated animate__fadeIn wrapper" id="profile">
           <div class="row justify-content-center mb-5">
-            <li class="image image-wrapper" style="list-style: none; margin: 0 auto;"> 
-              <img src="{{user.profile_image.url}}" alt="profile" width="60" height="60"  class="rounded-circle"/>
-              <!-- <strong>{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</strong> -->
-            </li>
+            <div class="image image-wrapper" style="list-style: none; margin: 0 auto;"> 
+              {% if user.profile_image%}
+              <div ><a href="{{ user.get_absolute_url }}" >
+                <img src="{{ user.profile_image.url }}" class="rounded-circle profile"  id="profile-image"/> 
+              </a></div>
+              {% else %}
+              <div>
+                <a href="{{ user.get_absolute_url }}" >
+                  <img src="{% static 'ss/images/default_profile.svg' %}" 
+                    class="rounded-circle profile"   
+                    id="profile-image"
+                    style="border: 1px none transparent;"
+                  /> 
+                </a>
+              </div>
+              {% endif %}
+            </div>
           </div>
           
           
@@ -115,6 +112,7 @@
     </div>
   </main>
 {% endblock content %} {% block javascript %}
+
 <script>
   $(function () {
   $(".side-navbar").on("click", function (ev) {

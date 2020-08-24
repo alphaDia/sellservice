@@ -10,7 +10,7 @@ from django.views.generic import DetailView
 from django.contrib import messages
 import json
 from . import forms
-from .models import Service, Categories, AnnonceModel
+from .models import Service, Categories, AnnonceModel, AnnonceModel
 # Create your views here.
 
 
@@ -196,6 +196,8 @@ class CreateAnnonce(View):
             '-publish_date')[:6]
         annonce_list = [
             {
+                'id': annonce.id,
+                'url': reverse('annonce-detail', kwargs={'id': annonce.id}),
                 'categorie': annonce.categorie,
                 'title': annonce.title,
                 'description': annonce.description,
@@ -216,4 +218,10 @@ class CreateAnnonce(View):
 
 
 class AnnonceDetail(DetailView):
-    template_name = "ss/detail.html"
+    model = 'AnnonceModel'
+    template_name = 'ss/detail.html'
+    context_object_name = "annonce"
+
+    def get_object(self):
+        _id = self.kwargs.get('id')
+        return get_object_or_404(AnnonceModel, id=_id)

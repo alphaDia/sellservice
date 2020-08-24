@@ -1,8 +1,125 @@
-{% extends "base_generic.html" %} {% load static %}
-{% block title %} Sign-in {% endblock title %} {% block content%}
+{% extends "base_generic.html" %} {% load static %} {% block title %} {{ annonce.title }} 
+{% endblock title %} {% block content%}
 <main class="container">
-  <h1>Hello world</h1>
-</main>
-{% endblock content %} {% block javascript %}
+  <div class="row pt-5">
+    <div class="col-md-8 col-sm-12">
+      <div class="shadow">
+        <p class="p-4" style="font-size: 2em; letter-spacing: 0.1em;">
+          {{ annonce.title }}
+        </p>
+        <p>
+          <img
+            src="{{ annonce.annonce_image.url }}"
+            alt="annonce-source-image"
+            class="w-100"
+          />
+        </p>
+        <p class="p-4" style="line-height: 2.5em; font-size: 1.5em;">
+          {{annonce.description}}
+        </p>
+        <p>
+          <a
+            href="#"
+            class="btn button mx-3 mb-3"
+            style="color: #fff; font-weight: bold;"
+            >{{annonce.categorie}}</a
+          >
+        </p>
+      </div>
+    </div>
 
-{% endblock javascript %}
+    <div class="col-md-4 col-sm-12">
+      <div class="shadow p-2">
+        <div>
+          <p class="h2 w-75 d-inline-block text-bottom">Basique</p>
+          <span class="" style="color: #148653; font-size: 1.2em;">100 FG</span>
+        </div>
+        <p class="text-muted px-2">Jour pour la livraison</p>
+
+        <div class="w-50 mx-auto">
+          <p class="btn button w-100">commander</p>
+          <p class="text-center w-100">
+            Paiement <span style="color: #148653;">Sécurisé</span>
+            <span class="material-icons d-inline-block"  
+              style="
+                color: #148653;
+                position: relative;
+                top: .1em;
+              "
+            >
+              lock
+            </span>
+          </p>
+        </div>
+
+        <div class="mx-auto px-4">
+          <p class="text-muted">Vos informations sont chiffrées par TLS</p>
+        </div>
+      </div>
+
+      <div class="shadow my-4">
+        <div class="header d-flex justify-content-around pt-4">
+          <img
+            src="{{ annonce.user.profile_image.url }}"
+            alt=""
+            srcset=""
+            class="rounded-circle profile"
+          />
+          <div>
+            <p class="h3">
+              {{annonce.user.first_name}}
+              <span>{{annonce.user.last_name}}</span>
+            </p>
+            <p class="text-muted">rating: 5.</p>
+          </div>
+        </div>
+
+        <div class="my-4" style="background: #f8f8fa;" style="width: 500em;">
+          <p class="p-4 text-center">
+            “Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Repellendus recusandae adipisci . ”
+          </p>
+        </div>
+
+        <div class="px-3">
+          <div>
+            <span class="material-icons mr-3">reply_all</span>
+            <p class="d-inline-block">Temps de reponse moy</p>
+            <strong class="ml-4">3h</strong>
+          </div>
+          <div>
+            <span class="material-icons mr-3">how_to_reg</span>
+            <p class="d-inline-block">Taux de prise en charge</p>
+            <strong class="ml-4">50%</strong>
+          </div>
+          <div>
+            <span class="material-icons mr-3">check_circle</span>
+            <p class="d-inline-block">Taux de completion</p>
+            <strong class="ml-5">70%</strong>
+          </div>
+          <div>
+            <span class="material-icons mr-3">access_time</span>
+            <p class="d-inline-block">Respect des delais</p>
+            <strong class="ml-5">94%</strong>
+          </div>
+          <div>
+            <span class="material-icons mr-3">portrait</span>
+            <p class="d-inline-block">vendeur depuis</p>
+            <strong class="ml-5">
+              {{ annonce.user.date_joined|date:"N Y" }}</strong
+            >
+          </div>
+
+          <div class="mt-4">
+            <a
+              href="{% url 'profile' annonce.user.id %}"
+              class="btn button w-100 d-inline-block my-3"
+              >Profile</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %} {% block javascript %} {% endblock javascript %}

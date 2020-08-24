@@ -3,21 +3,6 @@
 
 <main class="">
   {% include 'ss/sub_menu.html' %}
-  {% if messages %}
-  <div
-    class="alert container alert-success alert-dismissible fade show mt-0 absolute"
-    role="alert"
-  >
-    <span style="font-size: 1.5em;">
-      {% for message in messages%} {{message}} {% endfor %}
-    </span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-
-  {% endif %}
-
   <section class="" id="banner" style="width: 100vw; margin: 0;">
     <img
       src="{% static 'ss/images/banner.jpg' %}"
@@ -83,7 +68,8 @@
         </div>
       </div>
     </div>
-  </section> 
+  </section>
+   
   <!--<section class="sell">
     <div class=" d-flex justify-content-start align-items-center">
       <div class="sell_text">
@@ -98,9 +84,8 @@
               Lorem ipsum dolor
               Enim accusamus eius aut dolor</p>
       </div>
-    </div>-->
-
-  </section>
+    </div>
+  </section> -->
 </main>
 
 {% endblock content %} {% block javascript %}
@@ -154,7 +139,7 @@
                   </div>
                   <br />
                   <p >publish date: ${an.pub_date}</p>
-                  <a href="#" class="btn button btn-block">Details</a>
+                  <a href="${an.url}" class="btn button btn-block">Details</a>
                 </div>
               </div>
             </div>`

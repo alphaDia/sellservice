@@ -12,7 +12,4 @@ urlpatterns = [
     path('create-annonce', views.CreateAnnonce.as_view(), name='create-annonce'),
     path('profile/<int:id>', views.Profile.as_view(), name='profile'),
     path('annonce/<int:id>', views.AnnonceDetail.as_view(), name='annonce-detail')
-]
-
-if settings.DEBUG:
-    urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

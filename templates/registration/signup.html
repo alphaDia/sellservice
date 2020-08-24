@@ -98,8 +98,12 @@
       errorClass: "text-danger",
     });
 
+    function handleclick() {
+      
+    }
+
     $("#signupbutton").on("click", function (e) {
-      e.stopPropagation();
+      e.preventDefault()
 
       if (v_form.form()) {
         $.ajax({

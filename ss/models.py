@@ -80,6 +80,9 @@ class AnnonceModel(models.Model):
     annonce_image = models.ImageField(
         upload_to=user_directory_path2, default="")
 
+    def get_absolute_url(self):
+        return reverse('annonce-detail', kwargs={'id': self.id})
+
     def __str__(self):
         return self.title
 

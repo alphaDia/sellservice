@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" href="{% static 'ss/css/general.css' %}" />
     <link rel="stylesheet" href="{% static 'ss/css/navbar.css' %}" />
-    <link rel="stylesheet" href="{% static 'ss/css/footer.css'%}">
+    <link rel="stylesheet" href="{% static 'ss/css/footer.css'%}" />
     {% block css %}{% endblock css %}
 
     <title>
@@ -47,7 +47,7 @@
     />
   </form>
   <body id="top">
-    <header  class="shadow" style="margin: 0">
+    <header class="shadow" style="margin: 0;">
       <nav id="topNavigation">
         <ul>
           <div>
@@ -89,18 +89,93 @@
                 </button></a
               >
             </li>
-
           </div>
           <div>
             {% if user.is_authenticated %} {% if user.profile_image %}
-            <li ><a href="{{user.get_absolute_url}}" >
-              <img src="{{user.profile_image.url}}" class="rounded-circle profile"  id="profile-image"/> 
-            </a></li>
+            <li>
+              <div style="position: relative;">
+                <div
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  class="img_container"
+                >
+                  <img
+                    src="{{ user.profile_image.url }}"
+                    class="rounded-circle profile dropdown-toggle"
+                    id="profile-image"
+                  />
+                  <span class="material-icons d-inline-block mt-4" style="color: #148653;"
+                    >arrow_drop_down</span
+                  >
+                  
+                </div>
+
+                <div class="dropdown-menu mt-3" aria-labelledby="dropdownMenuButton">
+                  <span
+                    class="material-icons mt-4 arrow_up"
+                    style="
+                      position: absolute;
+                      top: -1.1em;
+                      left: 0em;
+                      z-index: 2000;
+                      color: #148653;
+                      font-size: 3em;
+                    "
+                    >arrow_drop_up</span
+                  >
+                  <a class="dropdown-item" href="{{ user.get_absolute_url }}"
+                    >{{ user.last_name }}</a
+                  >
+                  <a class="dropdown-item" href="{% url 'logout' %}">Deconnexion</a>
+                </div>
+              </div>
+            </li>
             {% else %}
             <li>
-              <a class="" href="{{ user.get_absolute_url}}"
-                >profile</a
-              >
+              <div style="position: relative;">
+                <div
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  class="img_container"
+                >
+                  <img
+                    src="{% static 'ss/images/default_profile.svg' %}"
+                    class="rounded-circle profile dropdown-toggle"
+                    id="profile-image"
+                    style="border: 1px solid transparent;"
+
+                  />
+                  <span class="material-icons d-inline-block mt-4" style="color: #148653;"
+                    >arrow_drop_down</span
+                  >
+                  
+                </div>
+
+                <div class="dropdown-menu mt-3" aria-labelledby="dropdownMenuButton">
+                  <span
+                    class="material-icons mt-4 arrow_up"
+                    style="
+                      position: absolute;
+                      top: -1.1em;
+                      left: 0em;
+                      z-index: 2000;
+                      color: #148653;
+                      font-size: 3em;
+                    "
+                    >arrow_drop_up</span
+                  >
+                  <a class="dropdown-item" href="{{ user.get_absolute_url }}"
+                    >{{ user.last_name }}</a
+                  >
+                  <a class="dropdown-item" href="{% url 'logout' %}">Deconnexion</a>
+                </div>
+              </div>
             </li>
             {% endif %} {% endif %}
           </div>
@@ -109,15 +184,16 @@
     </header>
 
     {% block content %} {% endblock content %}
-    
+
     <footer class="footer">
-      <a href="#top" class="reach_link shadow d-none"><span class="material-icons reach_icon">arrow_upward </span></a>
+      <a href="#top" class="reach_link shadow d-none"
+        ><span class="material-icons reach_icon">arrow_upward </span></a
+      >
       <nav class="footer_nav">
         <section class="footer_col">
           <a href="#" class="footer_logo">Proffession</a>
           <p class="footer_slogan">
-            Notre but aidé les petits
-            business à avoir de la visibilité
+            Notre but aidé les petits business à avoir de la visibilité
           </p>
         </section>
         <section class="footer_col">
@@ -166,7 +242,7 @@
           </div>
         </section>
         <div class="clear_both"></div>
-        <small class="footer_small">&copy; 2020  X.inc all right reserved</small>
+        <small class="footer_small">&copy; 2020 X.inc all right reserved</small>
       </nav>
     </footer>
 
@@ -187,45 +263,45 @@
 
     {% block javascript %} {% endblock javascript %}
     <script>
-      $(function() {
-        const showAnchor = 400
+      $(function () {
+        const showAnchor = 400;
 
-        let isScrolled = false
+        let isScrolled = false;
 
         const $anchor = $("a[href='#top']");
 
-        $anchor.on("click", function(ev) {
-          $("html, body").animate({
-            scrollTop: $($(this).attr("href")).offset().top,
-          }, 800);
+        $anchor.on("click", function (ev) {
+          $("html, body").animate(
+            {
+              scrollTop: $($(this).attr("href")).offset().top,
+            },
+            800
+          );
           return false;
-        })
+        });
 
         window.onscroll = () => {
-          isScrolled = true
-        }
+          isScrolled = true;
+        };
 
         setInterval(() => {
-
           if (isScrolled) {
-            isScrolled = false
+            isScrolled = false;
 
             if (!(Number.parseInt(window.pageYOffset, 10) >= showAnchor)) {
-
               if (!$anchor.hasClass("d-none")) {
-                $anchor.removeClass("animate__animated animate__fadeIn")
-                $anchor.addClass("animate__animated animate__fadeOut")
+                $anchor.removeClass("animate__animated animate__fadeIn");
+                $anchor.addClass("animate__animated animate__fadeOut");
               }
-              return ;
+              return;
             }
 
             $anchor.removeClass("animate__animated animate__fadeOut d-none");
-            $anchor.addClass("animate__animated animate__fadeIn")
+            $anchor.addClass("animate__animated animate__fadeIn");
           }
-        }, 300)
+        }, 300);
 
-      })
-      
+      });
     </script>
   </body>
 </html>
